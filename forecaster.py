@@ -18,7 +18,7 @@ def make_n_predictions(Q,model,n=6,time_steps=10):
         last_Q = last_Q.append({"energy": predict_next[0][0]}, ignore_index=True)
     return last_Q[-n:]
 
-def get_price_from_prediction(Q):
+def get_price_from_Q(Q):
     Q0 = 20
     Q30 = 55.4213045642437
     Q70 = 77.81349172281733
