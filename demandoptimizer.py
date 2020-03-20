@@ -227,7 +227,7 @@ class DemandOptimizer:
 
         """
         response = np.zeros((4,6))
-        possible_prices = np.array([0.3,6.5,9.4,13.4])
+        possible_prices = np.array([0.3,10.1,14.4,20.8])
         for t in range(6):
             for j,p in enumerate(possible_prices):
                 mod_price = self.price_list.copy()
@@ -269,7 +269,7 @@ class DemandOptimizer:
             np.savetxt(f,np.array([self.curr_temp_air]))
 
 
-        return self.curr_temp_air, self.curr_temp_water
+        return self.curr_temp_air, self.curr_temp_water, next_timestep_demand
 
 if __name__ == "__main__":
     agent_dict = {

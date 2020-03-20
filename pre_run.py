@@ -19,11 +19,11 @@ def agent_configs():
     slope_water = abs(np.random.normal(1,0.1,1)[0])
     desire_temp_air = abs(np.random.normal(22,1,1)[0])
     desire_temp_water = abs(np.random.normal(60,2,1)[0])
-    alpha_water = abs(np.random.normal(1,0.1,1)[0])
+    alpha_water = abs(np.random.normal(0.5,0.1,1)[0])
     alpha_air = abs(np.random.normal(1.5,0.2,1)[0])
-    alpha_cost = abs(np.random.normal(1,0.1,1)[0])
+    alpha_cost = abs(np.random.normal(0.5,0.05,1)[0])
     baseload = abs(np.random.normal(0.3,0.05,1)[0])
-    solar = np.random.choice([True, False, False]) # 1/3 chance of being prosumer
+    solar = np.random.choice([True, False, False, False]) # 1/3 chance of being prosumer
 
     agent_dict = {  'P_water' : P_water,
                     'W_arr' : W_arr,
@@ -48,28 +48,34 @@ def agent_configs():
 
     return agent_dict
 
-cwd = os.getcwd()
-agent_config_dir = os.path.join(cwd,'agent_config_files')
-if not os.path.exists(agent_config_dir):
-    os.mkdir(agent_config_dir)
-num_of_agents = 30
+def clean_up(cwd):
+    path_to_agent_demand = os.path.join(cwd,'agent_demand_files')
+    f_list = os.listdir(path_to_agent_demand)
+    f_list.remove("dso_demand.csv")
+    [os.remove(os.path.join(path_to_agent_demand,f)) for f in f_list]
 
-# based on LSTM price forecast
-price_list =  [10.4] * 4 + [20.8] * 2
+def generate_agent_cfg(num_of_agents=30):
+    cwd = os.getcwd()
+    agent_config_dir = os.path.join(cwd,'agent_config_files')
+    if not os.path.exists(agent_config_dir):
+        os.mkdir(agent_config_dir)
+
+    # based on LSTM price forecast
+    price_list =  [10.4] * 4 + [20.8] * 2
 
 
-"""
- writes the initial configuration of agents
- does not take into account of curr_t
- curr_t must be supplied in main.py
-"""
-for agent_id in range(num_of_agents):
-    agent_dict = agent_configs()
-    agent_dict['price_list'] = price_list
-    name_of_pickle = "agent_id_" + str(agent_id) + "_params.p"
-    output_file = os.path.join(agent_config_dir, name_of_pickle)
-    pickle_file = open( output_file, "wb")
-    pickle.dump(agent_dict, pickle_file)
-    pickle_file.close()
-    
+    """
+     writes the initial configuration of agents
+     does not take into account of curr_t
+     curr_t must be supplied in main.py
+    """
+    for agent_id in range(num_of_agents):
+        agent_dict = agent_configs()
+        agent_dict['price_list'] = price_list
+        name_of_pickle = "agent_id_" + str(agent_id) + "_params.p"
+        output_file = os.path.join(agent_config_dir, name_of_pickle)
+        pickle_file = open( output_file, "wb")
+        pickle.dump(agent_dict, pickle_file)
+        pickle_file.close()
+        
 
