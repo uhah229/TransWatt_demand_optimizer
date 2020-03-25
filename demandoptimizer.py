@@ -92,11 +92,15 @@ class DemandOptimizer:
         for i in range(0,len(opt)):
             I_t = opt[i]
             w_t = self.W_arr[i]
-            temp_out_t = temp_out[i]
+            temp_out_t = temp_out[i] + 10 # added arbritrary temperature from outside
             temp_t = ((self.vol_water-self.water_usage*w_t)*(temp_t+273.15) + self.water_usage*w_t*(temp_inflow+273.15))/self.vol_water \
                     +(self.P_water*I_t-U/1000*self.tank_area*(temp_t-temp_out_t))*delta_t/(m*C) - 273.15
 
             scen_temp[i]= temp_t
+
+            # changed /
+            if scen_temp[i] > self.desire_temp_water:
+                scen_temp[i] = self.desire_temp_water
 
         return scen_temp
 
@@ -207,7 +211,7 @@ class DemandOptimizer:
         delta_t = 3600/4 # -- 1 hour (3600s)
         m = self.vol_water*1000 #volume of water * density [kg]
         self.curr_temp_water = ((self.vol_water-self.water_usage*w_t)*(temp_t+273.15) + self.water_usage*w_t*(temp_inflow+273.15))/self.vol_water \
-                +(self.P_water*best_schedule_water[0]-U/1000*self.tank_area*(temp_t-temp_out_t))*delta_t/(m*C) - 273.15
+                +(self.P_water*best_schedule_water[0]-U/1000*self.tank_area*(temp_t-temp_out_t+10))*delta_t/(m*C) - 273.15
 
         U=0.04
         C=1

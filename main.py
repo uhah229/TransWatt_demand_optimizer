@@ -33,7 +33,7 @@ path_to_configs = os.path.join(cwd,'agent_config_files')
 list_of_configs = os.listdir(path_to_configs)
 
 
-for t in np.arange(6,30,0.25):
+for t in np.arange(6,30*30,0.25):
     curr_t = t % 24
     next_timestep_system_demand = 0
     for config_fname in list_of_configs:
